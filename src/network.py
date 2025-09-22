@@ -21,7 +21,7 @@ class Network(object):
         return a
 
     def SGD(self, training_data: list[tuple], epochs, mini_batch_size,
-            eta, test_data=None):
+            eta=5.0, schedule=None, test_data=None):
 
         if test_data:
             n_test = len(test_data)
@@ -32,8 +32,8 @@ class Network(object):
                             for k in range(0, n, mini_batch_size)]
 
             for mini_batch in mini_batches:
-                eta = 5-3*sigmoid(3*(j-25))
-                self.update_mini_batch(mini_batch,eta)
+                curr_eta = eta if not schedule else schedule(j)
+                self.update_mini_batch(mini_batch,curr_eta)
             if test_data:
                 print(f"Epoch {j}: {self.evaluate(test_data)} / {n_test} -> {self.evaluate(test_data)/n_test:.2f}")
             else:
